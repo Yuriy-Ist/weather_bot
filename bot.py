@@ -9,6 +9,7 @@ from settings import bot_config
 from api_requests import request
 from database import orm
 
+
 bot = Bot(token=bot_config.bot_token) 
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
@@ -18,7 +19,6 @@ class ChoiceCityWeather(StatesGroup):
 
 class SetUserCity(StatesGroup):
     waiting_user_city = State()
-
 
 @dp.message_handler(regexp='Погода в другом месте')
 async def sity_start(message: types.Message):
@@ -48,7 +48,6 @@ async def city_choisen(message: types.Message, state = FSMContext):
     await message.answer(text, reply_markup=markup)
     await state.finish()
 
-
 @dp.message_handler(commands=['start'])
 async def start_message(message: types.Message):
     orm.add_user(message.from_user.id)
@@ -60,7 +59,6 @@ async def start_message(message: types.Message):
     markup.add(btn1, btn2, btn3, btn4)
     text = f'Привет {message.from_user.first_name}, я бот, который расскажет тебе о погоде на сегодня'
     await message.answer(text, reply_markup=markup)
-
 
 @dp.message_handler(regexp='Погода в моем городе')
 async def user_city_weather(message: types.Message):
@@ -79,7 +77,6 @@ async def user_city_weather(message: types.Message):
     orm.create_report(message.from_user.id, data['temp'], data['feels_like'], data['wind_speed'], data['pressure_mm'], city)
     text = f'Погода в {city}\nТемпература: {data["temp"]} C\nОщущается как: {data["feels_like"]} C \nСкорость ветра: {data["wind_speed"]} m/c \nДавление: {data["pressure_mm"]} mm'
     await message.answer(text, reply_markup=markup)
-
 
 @dp.message_handler(regexp='Установить свой город')
 async def set_user_city_start(message: types.Message):
@@ -108,7 +105,6 @@ async def user_city_choisen(message: types.Message, state = FSMContext):
     await message.answer(text, reply_markup=markup)
     await state.finish()
 
-
 @dp.message_handler(regexp='Меню')
 async def start_message(message: types.Message):
     markup = types.reply_keyboard.ReplyKeyboardMarkup(row_width=2)
@@ -119,7 +115,6 @@ async def start_message(message: types.Message):
     markup.add(btn1, btn2, btn3, btn4)
     text = f'Привет {message.from_user.first_name}, я бот, который расскжет тебе о погоде на сегодня'
     await message.answer(text, reply_markup=markup)
-
 
 @dp.message_handler(regexp='История')
 async def get_reports(message: types.Message):
@@ -262,7 +257,6 @@ async def callback_query(call, state: FSMContext):
             )
             await call.message.edit_text(text='История зпросов', reply_markup=inline_markup)
 
-
 @dp.message_handler(lambda message: message.from_user.id in bot_config.tg_bot_admin and message.text == 'Администратор')
 async def admin_panel(message: types.Message):
     markup = types.reply_keyboard.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -270,8 +264,6 @@ async def admin_panel(message: types.Message):
     markup.add(btn1)
     text = f'Панель Администратора'
     await message.answer(text, reply_markup=markup)
-
-
 
 @dp.message_handler(lambda message: message.from_user.id in bot_config.tg_bot_admin and message.text == 'Список пользователей')
 async def get_all_users(message: types.Message):

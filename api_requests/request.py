@@ -1,9 +1,7 @@
 import json
-
 import requests
 
 from settings import api_config
-
 
 
 def get_city_coord(city):
@@ -11,8 +9,6 @@ def get_city_coord(city):
     r = requests.get('https://geocode-maps.yandex.ru/1.x', params=payload)
     geo = json.loads(r.text)
     return geo['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos']
-
-
 
 def get_weather(city):
     coordinates = get_city_coord(city).split()
